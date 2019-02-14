@@ -9,7 +9,6 @@ $(document).ready(function() {
             method: 'POST',
             url: $link.attr('href')
         }).done(function(data) {
-            console.log(data);
             $('.js-like-article-count').html(data.hearts);
         });
     });
