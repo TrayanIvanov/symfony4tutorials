@@ -28,7 +28,6 @@ class ArticleFixtures extends BaseFixture
     {
         $this->createMany(Article::class, 10, function (Article $article, $count) {
             $article->setTitle($this->faker->randomElement(self::$articleTitles))
-                ->setSlug($this->faker->slug)
                 ->setContent('Spicy **jalapeno bacon** ipsum dolor amet veniam shank in dolore.');
 
             if ($this->faker->boolean(70)) {
