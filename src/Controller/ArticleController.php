@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
-use App\Service\MarkdownHelper;
+use App\Entity\Article;
 use App\Service\SlackClient;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,13 +23,18 @@ class ArticleController extends AbstractController
     /**
      * @Route("/news/{slug}", name="article_show")
      */
-    public function show($slug, MarkdownHelper $markdownHelper, SlackClient $slackClient)
+    public function show($slug, SlackClient $slackClient, EntityManagerInterface $em)
     {
         if ($slug === 'ipsum') {
             $slackClient->sendMessage('Bilbo Baggins', 'There and back again');
         }
 
-        $content = 'Spicy **jalapeno bacon** ipsum dolor amet veniam shank in dolore. Ham hock nisi landjaeger cow, lorem proident beef ribs aute enim veniam ut cillum pork chuck picanha. Dolore reprehenderit labore minim pork belly spare ribs cupim short loin in. Elit exercitation eiusmod dolore cow turkey shank eu pork belly meatball non cupim.';
+        $repository = $em->getRepository(Article::class);
+        /** @var Article $article */
+        $article = $repository->findOneBy(['slug' => $slug]);
+        if (!$article) {
+            throw $this->createNotFoundException(sprintf('No article for slug: %s', $slug));
+        }
 
         $comments = [
             'Comment 1',
@@ -36,12 +42,8 @@ class ArticleController extends AbstractController
             'Comment 3',
         ];
 
-        $content = $markdownHelper->parse($content);
-
         return $this->render('article/show.html.twig', [
-            'slug' => $slug,
-            'title' => ucwords(str_replace('-', ' ', $slug)),
-            'content' => $content,
+            'article' => $article,
             'comments' => $comments,
         ]);
     }
