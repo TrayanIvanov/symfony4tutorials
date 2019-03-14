@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
 use App\Service\SlackClient;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -28,17 +27,10 @@ class ArticleController extends AbstractController
     /**
      * @Route("/news/{slug}", name="article_show")
      */
-    public function show($slug, SlackClient $slackClient, EntityManagerInterface $em)
+    public function show(Article $article, SlackClient $slackClient)
     {
-        if ($slug === 'ipsum') {
+        if ($article->getSlug() === 'ipsum') {
             $slackClient->sendMessage('Bilbo Baggins', 'There and back again');
-        }
-
-        $repository = $em->getRepository(Article::class);
-        /** @var Article $article */
-        $article = $repository->findOneBy(['slug' => $slug]);
-        if (!$article) {
-            throw $this->createNotFoundException(sprintf('No article for slug: %s', $slug));
         }
 
         $comments = [
