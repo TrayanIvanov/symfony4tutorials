@@ -34,15 +34,8 @@ class ArticleController extends AbstractController
             $slackClient->sendMessage('Bilbo Baggins', 'There and back again');
         }
 
-        $comments = [
-            'Comment 1',
-            'Comment 2',
-            'Comment 3',
-        ];
-
         return $this->render('article/show.html.twig', [
             'article' => $article,
-            'comments' => $comments,
         ]);
     }
 
