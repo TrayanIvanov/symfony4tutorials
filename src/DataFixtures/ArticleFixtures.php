@@ -38,18 +38,6 @@ class ArticleFixtures extends BaseFixture
             $article->setAuthor($this->faker->randomElement(self::$articleAuthors))
                 ->setHeartCount($this->faker->numberBetween(5, 100))
                 ->setImageFilename($this->faker->randomElement(self::$articleImages));
-
-            $comment1 = new Comment();
-            $comment1->setAuthorName('Trayan Ivanov');
-            $comment1->setContent('Qwerty 123 lorem');
-            $comment1->setArticle($article);
-            $manager->persist($comment1);
-
-            $comment2 = new Comment();
-            $comment2->setAuthorName('Stefan Ivanov');
-            $comment2->setContent('Blah blah blah');
-            $comment2->setArticle($article);
-            $manager->persist($comment2);
         });
         $manager->flush();
     }
